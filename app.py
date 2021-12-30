@@ -45,6 +45,5 @@ def delete_contact():
     return "delete contact"
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
