@@ -11,3 +11,7 @@
 - MarkupSafe==2.0.1
 - mysqlclient==2.1.0
 - Werkzeug==2.0.2
+
+## Instalación
+
+_A completar._
