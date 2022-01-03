@@ -40,9 +40,16 @@ def add_contac():
 def edit_contact():
     return "edit contact"
 
-@app.route('/delete')
-def delete_contact():
-    return "delete contact"
+@app.route('/delete/<string:id>')
+def delete_contact(id):
+    # Pasamos la consulta a mysql para que elimine el id y lo guardamos en una variable
+    cur= mysql.connection.cursor()
+    # Hacemos la consulta a mysql
+    cur.execute('DELETE FROM contacts WHERE id={0}'.format(id)) #NOTA -> Otra forma de consultar
+    mysql.connection.commit()
+    # Antes de redireccionar pasamos una msj.
+    flash('Contact Removed Successfully')
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
