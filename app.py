@@ -36,15 +36,37 @@ def add_contac():
         flash('Contact Added Successfully')
         return redirect(url_for('index'))
 
-@app.route('/edit')
-def edit_contact():
-    return "edit contact"
+@app.route('/edit/<id>')
+def get_contact(id):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT * FROM contacts WHERE id=%s', (id))
+    data= cur.fetchall()
+    return render_template('edit.html', contact=data[0])
+
+@app.route('/update/<id>', methods= ['POST'])
+def update_contact(id):
+    if request.method == 'POST':
+        fullname= request.form['fullname']
+        phone= request.form['phone']
+        email= request.form['email']
+        cur= mysql.connection.cursor()
+        cur.execute("""
+            UPDATE contacts
+            SET fullname = %s,
+                phone = %s,
+                email = %s
+            WHERE id = %s
+        """, (fullname, phone, email, id))
+        # NOTA -> Una vez hecha la consulta NUNCA OLVIDAR ejecutarla
+        mysql.connection.commit()
+        flash('Contact Update Successfully')
+        return redirect(url_for('index'))
 
 @app.route('/delete/<string:id>')
 def delete_contact(id):
     # Pasamos la consulta a mysql para que elimine el id y lo guardamos en una variable
     cur= mysql.connection.cursor()
-    # Hacemos la consulta a mysql
+    # Hacemos la consulta a mysql (solo la declaramos pero no la ejecutamos)
     cur.execute('DELETE FROM contacts WHERE id={0}'.format(id)) #NOTA -> Otra forma de consultar
     mysql.connection.commit()
     # Antes de redireccionar pasamos una msj.
